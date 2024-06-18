@@ -1,4 +1,5 @@
 import { fetchRevenue } from '@/app/lib/data';
+import { Revenue } from '@/app/lib/definitions';
 import { generateYAxis } from '@/app/lib/utils';
 import { lusitana } from '@/app/ui/fonts';
 import { CalendarIcon } from '@heroicons/react/24/outline';
@@ -10,14 +11,19 @@ import { CalendarIcon } from '@heroicons/react/24/outline';
 // https://airbnb.io/visx/
 
 export default async function RevenueChart() {
-  const revenue = await fetchRevenue();
+  let revenue: Revenue[] | undefined = undefined;
+  await fetchRevenue();
+
+  if (!revenue) {
+    return <p className="text-red-500">Error loading revenue</p>;
+  }
 
   const chartHeight = 350;
   // NOTE: comment in this code when you get to this point in the course
-
+  //
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
-  if (!revenue || revenue.length === 0) {
+  if (!revenue) {
     return <p className="mt-4 text-gray-400">No data available.</p>;
   }
 
@@ -39,7 +45,7 @@ export default async function RevenueChart() {
             ))}
           </div>
 
-          {revenue.map((month) => (
+          {/* {revenue.map((month) => (
             <div key={month.month} className="flex flex-col items-center gap-2">
               <div
                 className="w-full rounded-md bg-blue-300"
@@ -51,7 +57,7 @@ export default async function RevenueChart() {
                 {month.month}
               </p>
             </div>
-          ))}
+          ))} */}
         </div>
         <div className="flex items-center pb-2 pt-6">
           <CalendarIcon className="h-5 w-5 text-gray-500" />
